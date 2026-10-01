@@ -32,6 +32,7 @@ export async function POST(req: Request) {
   }
   const { question, docs } = (await req.json()) as { question?: string; docs?: Doc[] };
   if (!question?.trim()) return Response.json({ error: "Ask a question first." }, { status: 400 });
+  if (question.length > 500) return Response.json({ error: "Keep the question under 500 characters." }, { status: 400 });
   if (!docs?.length) return Response.json({ error: "Add at least one document." }, { status: 400 });
   if (docs.reduce((n, d) => n + d.text.length, 0) > MAX_CHARS) {
     return Response.json({ error: "Documents are too large. Keep the library under about 300 KB of text." }, { status: 400 });
